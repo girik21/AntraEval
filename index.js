@@ -2,36 +2,49 @@ const API = (() => {
   const URL = "http://localhost:3000";
 
   const getCart = () => {
-    return fetch(`${URL}/cart`).then(response => response.json());
+    //Simple GET REQUEST for the cart
+    const cartGetter = fetch(`${URL}/cart`).then(response => response.json());
+    return cartGetter
   };
 
   const getInventory = () => {
-    return fetch(`${URL}/inventory`).then(response => response.json());
+    //Simple GET REQUEST for the Inventory
+    const inventoryGetter = fetch(`${URL}/inventory`).then(response => response.json());
+    return inventoryGetter
   };
 
   const addToCart = (inventoryItem) => {
-    return fetch(`${URL}/cart`, {
+    // POST REQUEST for the updating cart
+    const adder = fetch(`${URL}/cart`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(inventoryItem)
     }).then(response => response.json());
+
+    return adder
   };
 
   const updateCart = (id, newAmount) => {
-    return fetch(`${URL}/cart/${id}`, {
+    // PATCH for the updating cart. I used patch bause PUT kept giving me undefined
+    const updater = fetch(`${URL}/cart/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: newAmount })
     }).then(response => response.json());
+
+    return updater
   };
 
   const deleteFromCart = (id) => {
-    return fetch(`${URL}/cart/${id}`, {
+    const deleter = fetch(`${URL}/cart/${id}`, {
       method: 'DELETE'
     }).then(response => response.json());
+
+    return deleter
   };
 
   const checkout = () => {
+    //no need to change
     return getCart().then((data) =>
       Promise.all(data.map((item) => deleteFromCart(item.id)))
     );
@@ -89,6 +102,7 @@ const Model = (() => {
 
 const View = (() => {
   const renderInventory = (inventory) => {
+    //update the DOM
     const inventoryList = document.querySelector('.inventory-list');
     inventoryList.innerHTML = inventory.map(item => `
       <li class="inventory-item" data-id="${item.id}">
@@ -102,6 +116,7 @@ const View = (() => {
   };
 
   const renderCart = (cart) => {
+    //HElps to render all the span cart-item
     const cartList = document.querySelector('.cart-list');
     cartList.innerHTML = cart.map(item => `
       <li class="cart-item" data-id="${item.id}">
@@ -158,7 +173,7 @@ const Controller = ((model, view) => {
       }
     }
   };
-  
+
   const handleDelete = (id) => {
     model.deleteFromCart(id).then(() => {
       model.getCart().then(cart => {
