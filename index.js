@@ -190,6 +190,26 @@ const Controller = ((model, view) => {
     });
   };
 
+  
+  let switcher = false
+
+  const sortItems = () => {
+
+    if (switcher === false) {
+      state.inventory.sort((a, b) => a.content.localeCompare(b.content))
+      view.renderInventory(state.inventory)
+      switcher = true
+      console.log('After Click', switcher)
+    }
+    else if (switcher === true) {
+      console.log('Click again', switcher)
+      state.inventory.sort((a, b) => b.content.localeCompare(a.content))
+      view.renderInventory(state.inventory)
+    }
+
+
+  }
+
   const bootstrap = () => {
     init();
     state.subscribe(() => {
@@ -224,6 +244,8 @@ const Controller = ((model, view) => {
         handleDelete(id);
       } else if (target.classList.contains('checkout-btn')) {
         handleCheckout();
+      } else if (target.classList.contains('sorter')) {
+        sortItems();
       }
     });
   };

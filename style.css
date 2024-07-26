@@ -97,3 +97,10 @@ button {
     border-radius: 5px;
     margin-top: auto;
 }
+
+.sorter{
+    width: 100px;
+    font-size: 15px;
+    background-color: #74af4f;
+    color: white;
+}
